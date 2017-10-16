@@ -53,6 +53,11 @@ if ( typeof Object.create !== 'function' ) {
 				//INNER OVERRIDE SETTINGS
 				if(self.options.zoomType == "inner") {self.options.showLens = false;}
 
+                // APPENDTO OVERRIDE SETTINGS
+                if(self.options.appendTo != "body") {
+                    self.options.appendTo = '#' + self.options.appendTo;
+                }
+
 
 				//Remove alt on hover
 
@@ -258,7 +263,7 @@ if ( typeof Object.create !== 'function' ) {
 				//self.zoomContainer = $('<div/>').addClass('zoomContainer').css({"position":"relative", "height":self.nzHeight, "width":self.nzWidth});
 
 				self.zoomContainer = $('<div class="zoomContainer" style="-webkit-transform: translateZ(0);position:absolute;left:'+self.nzOffset.left+'px;top:'+self.nzOffset.top+'px;height:'+self.nzHeight+'px;width:'+self.nzWidth+'px;"></div>');
-				$('body').append(self.zoomContainer);	
+                $(self.options.appendTo).append(self.zoomContainer);
 
 
 				//this will add overflow hidden and contrain the lens on lens mode       
@@ -267,7 +272,7 @@ if ( typeof Object.create !== 'function' ) {
 				}
 				if(self.options.zoomType != "inner") {
 					self.zoomLens = $("<div class='zoomLens' style='" + self.lensStyle + self.lensRound +"'>&nbsp;</div>")
-					.appendTo(self.zoomContainer)
+                    .appendTo(self.zoomContainer)
 					.click(function () {
 						self.$elem.trigger('click');
 					});
@@ -305,7 +310,7 @@ if ( typeof Object.create !== 'function' ) {
 				//create zoom window 
 				if(isNaN(self.options.zoomWindowPosition)){
 					self.zoomWindow = $("<div style='z-index:999;left:"+(self.windowOffsetLeft)+"px;top:"+(self.windowOffsetTop)+"px;" + self.zoomWindowStyle + "' class='zoomWindow'>&nbsp;</div>")
-					.appendTo('body')
+                    .appendTo('#'+self.options.appendTo)
 					.click(function () {
 						self.$elem.trigger('click');
 					});
@@ -1733,8 +1738,9 @@ if ( typeof Object.create !== 'function' ) {
 	};
 
 	$.fn.elevateZoom.options = {
+            appendTo: "body",
 			zoomActivation: "hover", // Can also be click (PLACEHOLDER FOR NEXT VERSION)
-      zoomEnabled: true, //false disables zoomwindow from showing
+            zoomEnabled: true, //false disables zoomwindow from showing
 			preloading: 1, //by default, load all the images, if 0, then only load images after activated (PLACEHOLDER FOR NEXT VERSION)
 			zoomLevel: 1, //default zoom level of image
 			scrollZoom: false, //allow zoom on mousewheel, true to activate
@@ -1781,7 +1787,7 @@ if ( typeof Object.create !== 'function' ) {
 			cursor:"default", // user should set to what they want the cursor as, if they have set a click function
 			responsive:true,
 			onComplete: $.noop,
-      onDestroy: function() {},
+            onDestroy: function() {},
 			onZoomedImageLoaded: function() {},
 			onImageSwap: $.noop,
 			onImageSwapComplete: $.noop
